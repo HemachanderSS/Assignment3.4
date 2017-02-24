@@ -1,0 +1,54 @@
+1.HDFS federation:
+	*in HDFS Federation, we have horizontal scalability of name service,so we have multiple
+name node which are federated.
+	*The data node are present at bottom (i.e) underlying storage layer.
+	*Each data node registers with all the name nodes in the cluster.
+	*The data nodes transmit periodic heartbeats, block reports and handles commands from 
+the name nodes.
+	
+
+	*In HDFS federation, there will be multiple namespaces and each of them is managed
+by its respective name node.
+	*Each namespace has its own block pool.
+	
+	*Block Pool:
+`		It is set of blocks belonging to a specific namespace. We have a collection
+of block pool where each block pool is managed independently from the other.
+	
+	*Namespace volume:
+		*It will be along with a block pool.
+		*It is self-contained unit of management (i.e) each namespace volume can 
+function independently.
+		*If a namenode or namespace is deleted then corresponding block pool which is
+residing on the data nodes will also be deleted.
+ 
+
+High availability:
+		There will be two elements:
+		*Active and
+		*Standby configuration.
+	
+	*The name node must use highly-available shares storage to share the edit log.Edit 
+logs are read by standby name node when it takes the responsibility of the active name node.
+	*Data node must be send blocked reports to both the name nodes because of the block
+mappings.
+	*The seondary name node role is subsumed by the standby, Standby name node takes 
+periodic checkpoints of the active namenode.
+	*check point is done by standby name node.
+	*Each data node reports block stored by it name nodes.
+
+
+
+2.Handling failures while writing data in HDFS:
+	*The pipeline is closed and any packets in the ack queue are added to the front of 
+the data queue.
+	*The current block on the good data nodes is given a new identity,which is communicated
+to the name node.
+	*The failed data node is removed from the pipeline, and a new pipeline is constructed
+from the good data nodes.
+	*The remainder of the block data is written to the good data nodes in the pipeline.
+	*The name node notices that the block is under-replicated and it arranges for a 
+further replica to be created on another node.
+	*As long as dfs.namenode.replication.min replicas are written, the write will succeed.
+	*The block will be asynchronously replicated across the cluster until its target
+replication factor is reached.
