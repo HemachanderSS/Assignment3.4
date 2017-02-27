@@ -1,5 +1,5 @@
 1.HDFS federation:
-	*in HDFS Federation, we have horizontal scalability of name service,so we have multiple
+	*In HDFS Federation, we have horizontal scalability of name service,so we have multiple
 name node which are federated.
 	*The data node are present at bottom (i.e) underlying storage layer.
 	*Each data node registers with all the name nodes in the cluster.
